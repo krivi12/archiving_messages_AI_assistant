@@ -88,3 +88,20 @@ Main files:
   ```bash
   psql -h db -p 5432 -U "${POSTGRES_USER:-postgres}" -d "${POSTGRES_DB:-devdb}" -c "SELECT * FROM messages;"
   ```
+
+### Testing
+
+Run the endpoint tests in a devcontainer (tests create the DB schema at test start and drop it after the run):
+
+1. Ensure environment variables are available inside the devcontainer (or set them in `.env`).
+
+2. Run the tests (from the project root inside the devcontainer):
+
+```bash
+PYTHONPATH=. pytest -q tests/test_end.py
+```
+
+Notes:
+- The tests use the same DB connection settings as the app (`app.database`).
+- The test suite will create tables at the start of the pytest session and drop them at the end, so any data written by tests will not persist after the run.
+- Back up your data if you need to preserve production/dev data before running tests.
