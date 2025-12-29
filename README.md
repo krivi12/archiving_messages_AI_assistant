@@ -98,7 +98,7 @@ Run the endpoint tests in a devcontainer (tests create the DB schema at test sta
 2. Run the tests (from the project root inside the devcontainer):
 
 ```bash
-PYTHONPATH=. pytest -q tests/test_end.py
+PYTHONPATH=. pytest -q tests/test_endpoints.py
 ```
 
 Notes:
