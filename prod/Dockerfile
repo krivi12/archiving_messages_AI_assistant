@@ -14,6 +14,6 @@ RUN pip install --no-cache-dir -r /app/requirements.txt gunicorn
 
 COPY . /app
 
-EXPOSE 8001
+EXPOSE 8000
 
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "app.main:app", "--bind", "0.0.0.0:8001", "--workers", "4", "--timeout", "120"]
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "app.main:app", "--bind", "0.0.0.0:8000", "--workers", "4"]

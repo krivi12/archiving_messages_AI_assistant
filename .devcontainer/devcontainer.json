@@ -1,11 +1,11 @@
 {
   "name": "FastAPI + Postgres Dev Container",
   "dockerComposeFile": [
-    "../docker-compose.yml"
+    "../docker-compose.dev.yml"
   ],
   "service": "api",
   "workspaceFolder": "/workspace",
-  "forwardPorts": [8001, 5432],
+  "forwardPorts": [8001, 5433],
   "customizations": {
     "vscode": {
       "extensions": [

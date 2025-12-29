@@ -3,20 +3,22 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from contextlib import asynccontextmanager
 import logging
-# from sqlalchemy import UUID4
 
 from .database import engine, Base, SessionLocal
 from . import models, schemas
 
 @asynccontextmanager
-async def lifespan(app):
+async def lifespan(app: FastAPI):
+    """Create database tables at startup."""
     try:
         Base.metadata.create_all(bind=engine)
     except Exception as exc:
         logging.getLogger(__name__).warning("Could not create tables at startup: %s", exc)
     yield
 
+
 app = FastAPI(lifespan=lifespan)
+
 
 def get_db():
     db = SessionLocal()
@@ -25,8 +27,10 @@ def get_db():
     finally:
         db.close()
 
-@app.post("/messages", response_model=schemas.MessageRead, status_code=status.HTTP_201_CREATED)
+
+@app.post("/messages", response_model=schemas.MessageRead, status_code=status.HTTP_201_CREATED, summary="Create a new message", description="Create a new message with the provided details.")
 async def create_message(message_in: schemas.MessageCreate, db: Session = Depends(get_db)) -> schemas.MessageRead:
+    """Create a new message in the database."""
     msg = models.Message(
         message_id=message_in.message_id,
         chat_id=message_in.chat_id,
@@ -48,8 +52,9 @@ async def create_message(message_in: schemas.MessageCreate, db: Session = Depend
     return msg
 
 
-@app.patch("/messages", response_model=schemas.MessageRead, status_code=status.HTTP_200_OK)
+@app.patch("/messages", response_model=schemas.MessageRead, status_code=status.HTTP_200_OK, summary="Update an existing message", description="Update the content of an existing message by its ID.")
 async def update_message(message_id, message_content: str, db: Session = Depends(get_db)) -> schemas.MessageRead:
+    """Update an existing message's content in the database."""
 
     msg = db.query(models.Message).filter(models.Message.message_id == message_id).first()
 
@@ -65,10 +70,11 @@ async def update_message(message_id, message_content: str, db: Session = Depends
         db.refresh(msg)
         return msg
 
-@app.get("/messages/", status_code=status.HTTP_200_OK)    
+
+@app.get("/messages/", response_model=list[schemas.MessageRead], status_code=status.HTTP_200_OK, summary="Retrieve all messages", description="Get a list of all messages stored in the database.")    
 async def read_messages(db: Session = Depends(get_db)) -> list[schemas.MessageRead]:
+    """Retrieve all messages from the database."""
     messages = db.query(models.Message).all()
-    print(type(messages[0]))
     return messages
 
 
