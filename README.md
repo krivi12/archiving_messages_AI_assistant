@@ -74,6 +74,18 @@ Main files:
       curl http://localhost:8000/messages/
       ```
 
+    - GET `/messages/{message_id}` — get a single message
+
+      ```bash
+      curl http://localhost:8000/messages/11111111-1111-1111-1111-111111111111
+      ```
+
+    - DELETE `/messages/{message_id}` — delete a message
+
+      ```bash
+      curl -X DELETE http://localhost:8000/messages/11111111-1111-1111-1111-111111111111
+      ```
+
     Note: the examples use port `8000` (production); when running the dev container the service is served on port `8001`.
 
 
@@ -100,8 +112,3 @@ Run the endpoint tests in a devcontainer (tests create the DB schema at test sta
 ```bash
 PYTHONPATH=. pytest -q tests/test_endpoints.py
 ```
-
-Notes:
-- The tests use the same DB connection settings as the app (`app.database`).
-- The test suite will create tables at the start of the pytest session and drop them at the end, so any data written by tests will not persist after the run.
-- Back up your data if you need to preserve production/dev data before running tests.

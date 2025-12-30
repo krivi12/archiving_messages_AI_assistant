@@ -82,3 +82,36 @@ def test_read_messages():
     assert r.status_code == 200
     data = r.json()
     assert isinstance(data, list)
+
+
+def test_read_single_message():
+    payload = make_payload("11111111-1111-1111-1111-111111111116")
+    client.post("/messages", json=payload)
+
+    r = client.get(f"/messages/{payload['message_id']}")
+    assert r.status_code == 200
+    data = r.json()
+    assert data["message_id"] == payload["message_id"]
+    assert data["content"] == payload["content"]
+
+
+def test_read_single_message_not_found():
+    r = client.get("/messages/11111111-1111-1111-1111-111111111117")
+    assert r.status_code == 404
+
+
+def test_delete_message():
+    payload = make_payload("11111111-1111-1111-1111-111111111118")
+    client.post("/messages", json=payload)
+
+    r = client.delete(f"/messages/{payload['message_id']}")
+    assert r.status_code == 204
+
+    r = client.get(f"/messages/{payload['message_id']}")
+    assert r.status_code == 404
+
+
+def test_delete_message_not_found():
+    r = client.delete("/messages/99999999-9999-9999-9999-999999999999")
+    assert r.status_code == 404
+

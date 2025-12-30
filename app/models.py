@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, UUID, DateTime, Boolean
+from sqlalchemy import Column, String, UUID, DateTime, Boolean
 from .database import Base
 
 class Message(Base):
