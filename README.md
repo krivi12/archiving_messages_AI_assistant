@@ -27,6 +27,15 @@ docker compose -f docker-compose.prod.yml -p prod up --build
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
 ```
 
+### Testing
+
+Run the test suite using pytest:
+
+```bash
+pytest tests/test_endpoints.py
+```
+
+
 API overview
 
 Main files:
